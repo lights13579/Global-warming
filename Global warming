@@ -1,0 +1,84 @@
+import telebot         
+
+bot = telebot.TeleBot("7520051631:AAEiG2XylbDYD000vH1Y3UT7B_jWTrqCpNE")
+
+questions = [
+    {
+        "q":" 1. Что такое глобальное  потепление?/a) Увлечение осадков/б)"
+        "Повышение средней температуры/в)"
+        "Похолодание/г)Увеличение солнечной активности,"
+        "a"/"b"
+        "в"/"г"
+
+
+        "q":" 2. Что сильнее всего влияет наглобальное потепление?/a) Рыбалка/б)"
+        "Сжигание угля и нефти/в) Сбор урожая/г)"
+        "Спорт"
+        "a"/"b"
+        "в"/"г"
+
+
+        "q":" 3. Почему таяние ледников  опасно?/a) Вызывает землетрясения/б)"
+        "Повышает уровень воды/в) Делает океан соленым/г) Создает пустыни"
+        "a"/"b"
+        "в"/"г"
+
+
+    }
+]
+
+# Словами для тослежения состояния пользователей 
+user_answers = {}
+current_question = {}
+
+
+
+# Команда /start
+@bot.message_handler(commands=['start'])
+def start_quiz(message):
+    chat_id = message.chat.id
+    user_answers[chat_id] = []
+    current_question[chat_id] = []
+    bot.send_message(message.chat.id,
+                     "Hello  This is quiz about Global wraming  ")
+
+    
+# Отправка следующего вопроса
+def send_question(chat_id):
+    index = current_question[chat_id]
+    if index < len(questions):
+        bot.send_message(chat_id,
+questions[index] ["q"] )
+    else:
+        score = sum(
+            1 for i, answer in 
+enumerate(user_answers[chat_id]) if
+answer == questions[i]["q"]           
+        )
+        bot.send_message(chat_id,
+f"Викторина завершена! Ваш результат":
+{score} из  {len(questions)} "                       
+        )
+        
+
+# Ответ пользователя
+@bot.message_handler(func=lambda message:
+True )
+def handle_answer(message):
+    chat_id = message.chat.id
+    if chat_id in current_question:
+        answer = 
+message.text.strip().lower()
+
+user_answers[chat_id].append(answer)
+        current_question[chat_id] += 1
+        send_question_queston(chat_id)
+    else:
+        bot.send_message(chat_id,
+       "Напиши /start чтобы начать витарину,")
+
+# Запуск бота
+
+if __name__ == '__main__':
+    print("Бот запущен...")
+    bot.polling(none_stop=True)
